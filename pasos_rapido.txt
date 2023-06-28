@@ -1,0 +1,39 @@
+Para subir una nueva carpeta a GitHub, debes seguir los siguientes pasos:
+
+Crea una nueva carpeta en tu computadora y coloca los archivos que deseas subir dentro de ella.
+Abre la terminal y navega hasta la carpeta que acabas de crear.
+Inicializa un nuevo repositorio de Git en la carpeta con el siguiente comando:
+git init
+
+Agrega los archivos a tu repositorio local con el siguiente comando:
+git add .
+
+Realiza un commit de los cambios con el siguiente comando:
+git commit -m "Agregando nueva carpeta"
+
+Crea un nuevo repositorio en GitHub y copia la URL del repositorio.
+Conecta tu repositorio local con el remoto usando el siguiente comando:
+git remote add origin URL_DEL_REPOSITORIO
+
+Sube los cambios a GitHub con el siguiente comando:
+git push -u origin main
+
+
+
+
+git add . 
+
+git status
+
+git commit -m "mensaje descriptivo"
+
+git push 
+
+si hay cambio en el repositorio remoto se ejecuta git pull origin main
+
+
+para poder traer los cambios
+
+
+
+
