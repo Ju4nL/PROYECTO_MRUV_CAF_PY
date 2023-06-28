@@ -27,13 +27,33 @@ git status
 
 git commit -m "mensaje descriptivo"
 
-git push 
 
-si hay cambio en el repositorio remoto se ejecuta git pull origin main
+para subir los cambios al repositorio remoto
+git push  
 
 
-para poder traer los cambios
 
+para clonar todo el repositorio se usa 
+git clone url_del_repositorio
+
+
+para copiar cambios en el repositorio 
+git pull origin main
+
+
+
+/***************
+para ver la rama en la que estas 
+git branch
+
+para crear nueva rama usamos
+git branch nueva_rama
+
+para cambiar la rama main a la nueva rama usamos:
+git checkout nueva_rama
+
+para eliminar rama
+git branch -d nombre_rama #antes cambiarse de rama
 
 
 
