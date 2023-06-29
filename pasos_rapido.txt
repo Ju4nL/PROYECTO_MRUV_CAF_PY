@@ -29,7 +29,8 @@ git commit -m "mensaje descriptivo"
 
 
 para subir los cambios al repositorio remoto
-git push -u origin main
+git push  
+
 
 
 para clonar todo el repositorio se usa 
@@ -43,7 +44,7 @@ git pull origin main
 
 /***************
 para ver la rama en la que estas 
-git branch 
+git branch
 
 para crear nueva rama usamos
 git branch nueva_rama
@@ -55,22 +56,10 @@ para eliminar rama
 git branch -d nombre_rama #antes cambiarse de rama
 
 
-para agregar nuevos archivos a la rama nueva:
+/*****
+al iniciar el codigo y cuando termines tu avance
+
 git add .
 git commit -m "mensaje"
-
-para ver las diferencias entre main y nuevarama:
-git diff main nuevarama
-
-para unir a la rama master :
-
-moverse a la rama mas antigua y desde ahi ejecutar:
-git merge rama_actualizar rama_antigua
-
-
-
-/******+para configurar el repositorio
-git config --global user.name "Juan Manuel Lozada PC2"
-git config --global user.email "juanlozadacochaches@gmail.com"
-
+git push
 
