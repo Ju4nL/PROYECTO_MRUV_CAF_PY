@@ -56,6 +56,14 @@ para eliminar rama
 git branch -d nombre_rama #antes cambiarse de rama
 
 
+**************
+git diff main rama
+ para comparar
+
+ git merge Pc3_Juan main 
+
+ para traer los cambios de la otra rama a main
+ 
 /*****
 al iniciar el codigo y cuando termines tu avance
 
@@ -63,6 +71,5 @@ git add .
 git commit -m "mensaje"
 git push
 
-
-git config --global user.name "Juan Manuel Lozada Cochaches 3"
-git config --global user.email juanlozadacochaches@gmail.com
+$ git config --global user.name "John Doe"
+$ git config --global user.email johndoe@example.com
