@@ -63,3 +63,6 @@ git add .
 git commit -m "mensaje"
 git push
 
+
+git config --global user.name "Juan Manuel Lozada Cochaches 3"
+git config --global user.email juanlozadacochaches@gmail.com
