@@ -9,8 +9,13 @@ class MRUV:
     #constructor
     def __init__(self,name,posicion_final=0,acceleration=0,velocidad_inicial=0,velocidad_final=0,tiempo=0):
       
-      #validamos si exite un objeto con el nombre que ingrese el usuario
-      os.chdir(r'D:/JUAN/PROYECTO_CAF_CLON/PROYECTO_MRUV_CAF_PY/Archivos_Mru')
+      ruta_principal=str(os.getcwd()).replace('\Archivos_Mru','')
+      os.chdir(ruta_principal)
+      os.chdir('./Archivos_Mru/')
+
+      
+      # os.chdir(r'C:/Users/MILAGROS/Desktop/Juan/PROYECTO_MRUV_CAF_PY/Archivos_Mru')
+
       archivos=os.listdir()
       n=[archivo.replace('.xlsx','') for archivo in archivos if archivo.endswith('.xlsx')]
       
@@ -32,6 +37,8 @@ class MRUV:
         self.name=name
         self.archivo=name+'.xlsx'
 
+    #creamos las funciones para el objeto c.omo acelerar y desacelerar que afectan a la velocidad
+      print(f'nombre:{name},pf:{self.posicion_final},ac:{self.acceleration},vi:{self.velocidad_inicial},vf:{self.velocidad_final},t:{self.tiempo},ejecutando')
     #creamos las funciones para el objeto como acelerar y desacelerar que afectan a la velocidad
 
     def acelerar(self,acelerar):
@@ -74,10 +81,14 @@ class MRUV:
       return self.posicion
     
 
+
     def frm_tiempo(self):
       #va calcular el tiempo recorrido con la velocidad
       #t = (v - v₀) / a
-      self.tiempo=(self.velocidad_final-self.velocidad_inicial)/self.acceleration
+      if self.tiempo==0:
+        self.tiempo=(self.velocidad_final-self.velocidad_inicial)/self.acceleration     
+      else:
+        self.tiempo=self.tiempo
       return self.tiempo
 
 
@@ -115,7 +126,11 @@ class MRUV:
 
 
     def info_archivo(self):      
-      os.chdir(r'D:/JUAN/PROYECTO_CAF_CLON/PROYECTO_MRUV_CAF_PY/Archivos_Mru')
+      ruta_principal=str(os.getcwd()).replace('\Archivos_Mru','')
+      os.chdir(ruta_principal)
+      os.chdir('./Archivos_Mru/')
+      # os.chdir(r'C:/Users/MILAGROS/Desktop/Juan/PROYECTO_MRUV_CAF_PY/Archivos_Mru')
+      #os.chdir(r'D:/JUAN/PROYECTO_CAF_CLON/PROYECTO_MRUV_CAF_PY/Archivos_Mru')
       #buscamos si el archivo existe, para agregar info o crear
       if os.path.exists(self.archivo):
           df_existe=pd.read_excel(self.archivo)
@@ -164,7 +179,7 @@ class MRUV:
 
     def guardar_datos_aceleracion(self):
 
-      velocidad_final=float(self.velocidad_final)
+      aceleracion=float(self.acceleration)
       velocidad_inicial=float(self.velocidad_inicial)
 
       #a = (v - v₀) / t  --Formula que nos indican
@@ -172,7 +187,7 @@ class MRUV:
 
         self.list_acceleration=[]
         for second in self.list_tiempo:
-          calculo=self.acceleration
+          calculo=aceleracion
           # calculo=(velocidad_final-velocidad_inicial)/second
           self.list_acceleration.append(calculo)
       
