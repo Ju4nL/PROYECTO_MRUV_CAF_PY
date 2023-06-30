@@ -5,12 +5,12 @@ import threading #para ejecutar por segundo
 from itertools import zip_longest #para crear df teniendo listas vacias
 
 
-
 class MRUV:
     #constructor
     def __init__(self,name,posicion_final=0,acceleration=0,velocidad_inicial=0,velocidad_final=0,tiempo=0):
       
       #validamos si exite un objeto con el nombre que ingrese el usuario
+      os.chdir(r'D:/JUAN/PROYECTO_CAF_CLON/PROYECTO_MRUV_CAF_PY/Archivos_Mru')
       archivos=os.listdir()
       n=[archivo.replace('.xlsx','') for archivo in archivos if archivo.endswith('.xlsx')]
       
@@ -47,17 +47,23 @@ class MRUV:
       #Esta funcion va calcular la aceleracion que tendra el vehiculo
       #a = (v - v₀) / t  --Formula que nos indican
       if self.tiempo!=0:
-        self.acceleration=str((self.velocidad_final-self.velocidad_inicial)/self.tiempo)
+        self.acceleration=((self.velocidad_final-self.velocidad_inicial)/self.tiempo)
       if self.tiempo==0:
         #si no hay tiempo lo calculamos diferente
-        self.acceleration=((self.velocidad_final**2)-(self.velocidad_inicial**2))/(2*(self.posicion_final - self.posicion_incial))
+        self.acceleration=((self.velocidad_final**2)-(self.velocidad_inicial**2))/(2*(self.posicion_final))# - self.posicion_incial))
       return self.acceleration
 
 
     def frm_velocidad_final(self):
       #Esta funcion calculara la velocidad final
       #v = v₀ + at
-      self.velocidad_final=(self.velocidad_inicial+(self.acceleration*self.tiempo))
+      if self.tiempo!=0:
+        self.velocidad_final=(self.velocidad_inicial+(self.acceleration*self.tiempo))
+      if self.tiempo==0:
+        self.velocidad_cuadrado=(self.velocidad_inicial**2) + (2 * self.acceleration * (self.posicion_final - self.posicion_incial))
+        self.velocidad_final = self.velocidad_cuadrado**(1/2)   
+      return self.velocidad_final
+      
 
 
     def frm_posicion(self):
@@ -65,20 +71,18 @@ class MRUV:
       #x = x₀ + v₀t + (1/2)at²
       self.posicion=self.posicion_incial+(self.velocidad_inicial*self.tiempo)+((1/2) * (self.acceleration) * (self.tiempo ** 2))
 
+      return self.posicion
+    
 
     def frm_tiempo(self):
       #va calcular el tiempo recorrido con la velocidad
       #t = (v - v₀) / a
       self.tiempo=(self.velocidad_final-self.velocidad_inicial)/self.acceleration
+      return self.tiempo
 
 
-    def frm_velocidad_distancia(self):
-      #va calcular la velocidad a partir de la distancia y la aceleracion sin tener el tiempo
-      #v² = v₀² + 2a(x - x₀)
-      self.velocidad_cuadrado=(self.velocidad_inicial**2) + (2 * self.acceleration * (self.posicion_final - self.posicion_incial))
-      self.velocidad_final = self.velocidad_cuadrado**(1/2)   
 
-    
+
     #otras funciones que se usara o no
     def funcion_print_por_segundo(self):   
       for i in range(self.tiempo):
@@ -111,6 +115,7 @@ class MRUV:
 
 
     def info_archivo(self):      
+      os.chdir(r'D:/JUAN/PROYECTO_CAF_CLON/PROYECTO_MRUV_CAF_PY/Archivos_Mru')
       #buscamos si el archivo existe, para agregar info o crear
       if os.path.exists(self.archivo):
           df_existe=pd.read_excel(self.archivo)
@@ -136,6 +141,7 @@ class MRUV:
     
 
     def guardar_datos_distancia(self):
+      
       if self.posicion_final!=0:
         posicion_inicial=float(self.posicion_incial)
         velocidad_inicial=float(self.velocidad_inicial)
@@ -166,13 +172,13 @@ class MRUV:
 
         self.list_acceleration=[]
         for second in self.list_tiempo:
-          calculo=(velocidad_final-velocidad_inicial)/second
+          calculo=self.acceleration
+          # calculo=(velocidad_final-velocidad_inicial)/second
           self.list_acceleration.append(calculo)
       
       else:
         self.list_acceleration=[]
       #v = v₀ + at
-      print(self.list_tiempo)
       print(self.list_acceleration)
       
       return self.list_acceleration
@@ -180,20 +186,24 @@ class MRUV:
 
     def guardar_datos_velocidad(self):
 
-      velocidad_inicial=self.velocidad_inicial  
-       
-
+      velocidad_inicial=self.velocidad_inicial 
+      
       #tiempo calcular para graficar
       self.list_velocidad=[]
       for second in self.list_tiempo:
-        calculo=float(velocidad_inicial)+(float(self.list_acceleration[second-1]))
+        print(self.list_acceleration)
+        calculo=(velocidad_inicial+((self.list_acceleration[second-1]*second)))
+        print(velocidad_inicial)
+        print(self.list_acceleration[second-1])
+        
+        print(calculo)
         self.list_velocidad.append(calculo)
       
       #v = v₀ + at
-      print(self.list_tiempo)
       print(self.list_velocidad)
       
       return self.list_velocidad
+    
 
     def actualizar_variables(self):
       self.velocidad_inicial=self.velocidad_final
