@@ -413,7 +413,7 @@ namespace eval ttk::theme::forest-dark {
         # Entry
         ttk::style element create Entry.field image \
             [list $I(border-basic) \
-                {focus hover} $I(border-accent) \ 
+                {focus hover} $I(border-accent) \
                 invalid $I(border-invalid) \
                 disabled $I(border-basic) \
                 focus $I(border-accent) \
