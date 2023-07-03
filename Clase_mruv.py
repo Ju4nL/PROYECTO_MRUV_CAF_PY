@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt #para graficar informacion
 import pandas as pd #para manejo de datos
 import os #para rutas 
 import threading #para ejecutar por segundo
+import math
 from itertools import zip_longest #para crear df teniendo listas vacias
 
 
@@ -55,18 +56,25 @@ class MRUV:
       #a = (v - v₀) / t  --Formula que nos indican
       if self.tiempo!=0:
         self.acceleration=((self.velocidad_final-self.velocidad_inicial)/self.tiempo)
-      if self.tiempo==0:
+      elif self.tiempo==0:
         #si no hay tiempo lo calculamos diferente
         self.acceleration=((self.velocidad_final**2)-(self.velocidad_inicial**2))/(2*(self.posicion_final))# - self.posicion_incial))
+      elif self.tiempo!=0 and self.velocidad_final==0 and self.velocidad_inicial==0:
+        # aceleración = 2 * distancia / tiempo^2
+        self.acceleration=(2*self.posicion_final)/(self.tiempo**2)
+      else :
+        print('f')
+      print(self.acceleration,'acelearcion')
       return self.acceleration
 
 
     def frm_velocidad_final(self):
       #Esta funcion calculara la velocidad final
       #v = v₀ + at
-      if self.tiempo!=0:
+      if self.tiempo>0:
         self.velocidad_final=(self.velocidad_inicial+(self.acceleration*self.tiempo))
-      if self.tiempo==0:
+      elif self.tiempo==0:
+
         self.velocidad_cuadrado=(self.velocidad_inicial**2) + (2 * self.acceleration * (self.posicion_final - self.posicion_incial))
         self.velocidad_final = self.velocidad_cuadrado**(1/2)   
       return self.velocidad_final
@@ -75,12 +83,15 @@ class MRUV:
 
     def frm_posicion(self):
       #Esta funcion va calcular posicion
-      #x = x₀ + v₀t + (1/2)at²
-      self.posicion=self.posicion_incial+(self.velocidad_inicial*self.tiempo)+((1/2) * (self.acceleration) * (self.tiempo ** 2))
-
+      if self.tiempo!=0:
+        #x = x₀ + v₀t + (1/2)at²
+        self.posicion=self.posicion_incial+(self.velocidad_inicial*self.tiempo)+((1/2) * (self.acceleration) * (self.tiempo ** 2))
+      else :
+        self.posicion=((self.velocidad_final**2)-(self.velocidad_inicial**2))/(2*self.acceleration)
+      
+      self.posicion_final=self.posicion
       return self.posicion
     
-
 
     def frm_tiempo(self):
       #va calcular el tiempo recorrido con la velocidad
@@ -89,24 +100,11 @@ class MRUV:
         self.tiempo=(self.velocidad_final-self.velocidad_inicial)/self.acceleration     
       else:
         self.tiempo=self.tiempo
+
+
       return self.tiempo
 
 
-
-
-    #otras funciones que se usara o no
-    def funcion_print_por_segundo(self):   
-      for i in range(self.tiempo):
-          t = threading.Timer(1.0*i)
-          t.start()
-
-    def print(self):
-      print('velocidad_inicial:',self.velocidad_inicial)
-      print('tiempo:',self.tiempo)
-      print('acceleration:',self.acceleration)
-      print('velocidad_final:',self.velocidad_final)
-      print('posicion_incial:',self.posicion_incial)
-      print('posicion_final:',self.posicion_final)
 
 #'''GUARDAMOS LA INFORMACION PARA LUEGO PODER UTILIZARLOS EN DATOS Y OTROS GRAFICOS'''
 
@@ -141,17 +139,26 @@ class MRUV:
           # print("El archivo existe")
       else:
         self.df_datos.to_excel(self.archivo,sheet_name="Hoja 1",index=False)
-        print(self.df_datos)
-
       return self.archivo
     
+#''''GRAFICAMOS LA INFO QUE TENEMOS ''''
+    def extraer_unir_info_archivo(self):
+      df=pd.read_excel(self.archivo)
+      sec_max=df.iloc[-1]["Tiempo"] 
+      self.df_datos['Tiempo']=self.df_datos['Tiempo']+sec_max
+
+      dist_max=df.iloc[-1]["distancia"] 
+      self.df_datos['distancia']=self.df_datos['distancia']+dist_max
+
     def listar_tiempo(self):
       #tiempo calcular para graficar
       tiempo=self.tiempo
       self.list_tiempo=[]
-      for i in range(1, int(tiempo) + 1):
+      for i in range(1, int(math.ceil(tiempo)) ):
         self.list_tiempo.append(i)
 
+      self.list_tiempo.append(tiempo)
+      print(self.list_tiempo)
       return self.list_tiempo
     
 
@@ -180,22 +187,16 @@ class MRUV:
     def guardar_datos_aceleracion(self):
 
       aceleracion=float(self.acceleration)
-      velocidad_inicial=float(self.velocidad_inicial)
-
       #a = (v - v₀) / t  --Formula que nos indican
       if self.tiempo!=0:
-
         self.list_acceleration=[]
         for second in self.list_tiempo:
           calculo=aceleracion
           # calculo=(velocidad_final-velocidad_inicial)/second
           self.list_acceleration.append(calculo)
-      
       else:
         self.list_acceleration=[]
       #v = v₀ + at
-      print(self.list_acceleration)
-      
       return self.list_acceleration
 
 
@@ -207,55 +208,35 @@ class MRUV:
       self.list_velocidad=[]
       for second in self.list_tiempo:
         print(self.list_acceleration)
-        calculo=(velocidad_inicial+((self.list_acceleration[second-1]*second)))
-        print(velocidad_inicial)
-        print(self.list_acceleration[second-1])
-        
-        print(calculo)
+        print(math.ceil(second)-1)
+        calculo=(velocidad_inicial+((self.list_acceleration[math.ceil(second)-1]*second)))
         self.list_velocidad.append(calculo)
       
-      #v = v₀ + at
-      print(self.list_velocidad)
-      
+      #v = v₀ + at      
       return self.list_velocidad
     
 
-    def actualizar_variables(self):
+    def actualizar_variables_st(self):
       self.velocidad_inicial=self.velocidad_final
-      self.posicion_incial=self.posicion_final
+      self.velocidad_final=0
       self.tiempo=0
-
-
-#''''GRAFICAMOS LA INFO QUE TENEMOS ''''
-
-    #ejecutamos una funcion para poder graficar lo que se tiene
-    def graficar_velocidad(self):
-      plt.figure(figsize=(15,10))#para el tamaño
-      plt.plot(self.list_tiempo,self.list_velocidad,marker='o',linestyle='--',color='g')
-      plt.xticks(self.list_tiempo)
-      plt.yticks(self.list_velocidad)
-      plt.xlabel('Tiempo')#para dar nombre al grafico
-      plt.ylabel('Velocidad')#para dar nombre al grafico
-
-    def graficar_distancia(self):
-      plt.figure(figsize=(15,10))#para el tamaño
-      plt.plot(self.list_tiempo,self.list_posicion,marker='o',linestyle='--',color='g')
-      plt.xticks(self.list_tiempo)
-      plt.yticks(self.list_posicion)  
-      plt.xlabel('Tiempo')#para dar nombre al grafico
-      plt.ylabel('Posicion')#para dar nombre al grafico
-
-    def graficar_aceleracion(self):
-      plt.figure(figsize=(15,10))#para el tamaño
-      plt.plot(self.list_tiempo,self.list_acceleration,marker='o',linestyle='--',color='g')
-      plt.xticks(self.list_tiempo)
-      plt.yticks(self.list_acceleration)  
-      plt.xlabel('Tiempo')#para dar nombre al grafico
-      plt.ylabel('Aceleracion')#para dar nombre al grafico
+      self.acceleration=0
     
-    def extraer_info_archivo(self):
-      df=pd.read_excel(self.archivo)
-      self.list_tiempo=df['Tiempo']
-      self.list_posicion=df['distancia']
-      self.list_acceleration=df['acceleration']
-      self.list_velocidad=df['velocidad']
+    def actualizar_variables_ct(self):
+      self.velocidad_inicial=self.velocidad_final
+      self.velocidad_final=0
+      self.acceleration=0
+
+    def variable_tiempo(self):
+      return self.tiempo
+    
+    def variable_aceleracion(self):
+      return self.acceleration
+    
+    def variable_velocidad(self):
+      return self.velocidad_final
+    
+    def variable_posicion(self):
+      return self.posicion_final
+    
+    
