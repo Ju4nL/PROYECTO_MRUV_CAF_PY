@@ -53,15 +53,15 @@ class MRUV:
 #'''CREANDO FORMULAS DE MRUV PARA PODER CALCULAR LOS DATOS QUE VA CORRIENDO EL VEHICULO'''
     def frm_acceleration(self):
       #Esta funcion va calcular la aceleracion que tendra el vehiculo
-      #a = (v - v₀) / t  --Formula que nos indican
-      if self.tiempo!=0:
-        self.acceleration=((self.velocidad_final-self.velocidad_inicial)/self.tiempo)
+      #a = (v - v₀) / t  --Formula que nos 
+      if self.tiempo!=0 and self.velocidad_final==0 and self.velocidad_inicial==0:
+        # aceleración = 2 * distancia / tiempo^2
+        self.acceleration=(2*self.posicion_final)/(self.tiempo**2)
       elif self.tiempo==0:
         #si no hay tiempo lo calculamos diferente
         self.acceleration=((self.velocidad_final**2)-(self.velocidad_inicial**2))/(2*(self.posicion_final))# - self.posicion_incial))
-      elif self.tiempo!=0 and self.velocidad_final==0 and self.velocidad_inicial==0:
-        # aceleración = 2 * distancia / tiempo^2
-        self.acceleration=(2*self.posicion_final)/(self.tiempo**2)
+      elif self.tiempo!=0:
+        self.acceleration=((self.velocidad_final-self.velocidad_inicial)/self.tiempo)
       else :
         print('f')
       print(self.acceleration,'acelearcion')

@@ -173,17 +173,26 @@ class Controlador :
         self.var_posicion=objeto_Mruv.variable_posicion()
 
 
+    def alerta(self):
+        self.var_alerta='hola'
+        return self.var_alerta
+    
+
     def variable_aceleracion(self):
         return self.var_aceleracion
     
+
     def variable_tiempo(self):
         return self.var_tiempo
+
 
     def variable_posicion (self):
         return self.var_posicion 
 
+
     def variable_velocidad (self):
         return self.var_velocidad 
-        
+
+
     def variable_archivo(self):
         return self.var_archivo

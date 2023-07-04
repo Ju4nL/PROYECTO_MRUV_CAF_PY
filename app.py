@@ -3,7 +3,6 @@ from tkinter import ttk
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import Clase_mruv as mruv
 import MVC as ctr
 import os
 
@@ -33,11 +32,12 @@ def leer_variables(boton):
     var_velocidad=controlador.variable_velocidad()
     var_posicion=controlador.variable_posicion()
     var_archivo=controlador.variable_archivo()
-    
+    var_alerta=controlador.alerta()
+
     actualizar_combobox()
     completar_tabla(var_archivo)
     actualizar_grafico(var_archivo)
-    actualizar_entry(var_tiempo,var_aceleracion,var_velocidad,var_posicion)
+    actualizar_entry(var_tiempo,var_aceleracion,var_velocidad,var_posicion,var_alerta)
 
 
 def completar_tabla(archivo):
@@ -158,12 +158,11 @@ def cambiar_combobox_graficos():
     actualizar_grafico(archivo)
 
 
-def actualizar_entry(tiempo,aceleracion,velocidad,posicion):
-    print('se ejecuto')
-    texto = "Texto de ejemplo"
+def actualizar_entry(tiempo,aceleracion,velocidad,posicion,alerta):
+
     et_alert.configure(state="normal")
     et_alert.delete(0, "end")
-    et_alert.insert(0, texto)
+    et_alert.insert(0, alerta)
     et_alert.configure(state="readonly") 
 
 
