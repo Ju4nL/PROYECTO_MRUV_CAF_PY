@@ -5,9 +5,39 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import MVC as ctr
 import os
+import emoji
 
 
-def leer_variables(boton):   
+def leer_variables():   
+    ruta_principal=str(os.getcwd()).replace('\Archivos_Mru','')
+    os.chdir(ruta_principal)
+    os.chdir('./Archivos_Mru/')
+    
+    nombre = et_nombre.get() 
+    velocidad_inicial = et_Velocidad_Ini.get() if len(et_Velocidad_Ini.get()) != 0 else 0
+    velocidad_final = et_Velocidad_fin.get() if len(et_Velocidad_fin.get()) != 0 else 0
+    tiempo =et_Tiempo.get() if len(et_Tiempo.get()) != 0 else 0
+    posicion_final = et_Posicion_fin.get() if len(et_Posicion_fin.get()) != 0 else 0
+    aceleracion = et_Aceleracion.get() if len(et_Aceleracion.get()) != 0 else 0
+
+    controlador=ctr.Controlador(nombre,float(posicion_final),float(aceleracion),float(velocidad_inicial),float(velocidad_final),float(tiempo))
+
+    controlador.calcular_uso()
+
+    var_tiempo=controlador.variable_tiempo()
+    var_aceleracion=controlador.variable_aceleracion()
+    var_velocidad=controlador.variable_velocidad()
+    var_posicion=controlador.variable_posicion()
+    var_archivo=controlador.variable_archivo()
+    var_alerta=controlador.alerta()
+
+    actualizar_combobox()
+    completar_tabla(var_archivo)
+    actualizar_grafico(var_archivo)
+    actualizar_entry(var_tiempo,var_aceleracion,var_velocidad,var_posicion,var_alerta)
+
+
+def frenado():   
     ruta_principal=str(os.getcwd()).replace('\Archivos_Mru','')
     os.chdir(ruta_principal)
     os.chdir('./Archivos_Mru/')
@@ -21,11 +51,8 @@ def leer_variables(boton):
 
     controlador=ctr.Controlador(nombre,float(posicion_final),float(aceleracion),float(velocidad_inicial),float(velocidad_final),float(tiempo))
     
-    if  boton=="frenar": 
-        controlador.frenado()
-    else:
-        controlador.calcular_uso()
-        print('f')
+    controlador.frenado()
+
 
     var_tiempo=controlador.variable_tiempo()
     var_aceleracion=controlador.variable_aceleracion()
@@ -38,6 +65,7 @@ def leer_variables(boton):
     completar_tabla(var_archivo)
     actualizar_grafico(var_archivo)
     actualizar_entry(var_tiempo,var_aceleracion,var_velocidad,var_posicion,var_alerta)
+
 
 
 def completar_tabla(archivo):
@@ -275,10 +303,10 @@ et_Aceleracion.grid(row=11, column=0, padx=0, pady=5, sticky="ew")
 
 # # Botón para imprimir las variables
 # Togglebutton
-button = ttk.Button(frame1,  text="Crear", command=lambda: leer_variables("crear"), style="Accent.TButton")
+button = ttk.Button(frame1,  text="Crear", command=leer_variables, style="Accent.TButton")
 button.grid(row=12, column=0, padx=0, pady=10, sticky="ew")
 
-button_fr = ttk.Button(frame1,  text="Aclerar y Frenar", command=lambda: leer_variables("frenar"), style="Accent.TButton")
+button_fr = ttk.Button(frame1,  text="Aclerar y Frenar", command=frenado, style="Accent.TButton")
 button_fr.grid(row=13, column=0, padx=0, pady=10, sticky="ew")
 
 

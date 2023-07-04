@@ -1,5 +1,8 @@
 import Clase_mruv as mruv
 import os
+import emoji
+
+
 
 # objeto_Mruv=mruv.MRUV(nombre,float(posicion_final),float(aceleracion),float(velocidad_inicial),float(velocidad_final),float(tiempo))
 
@@ -24,7 +27,7 @@ class Controlador :
         self.posicion_final=posicion_final
         self.name=name
 
-
+        self.var_archivo=''
 
     def calcular_uso(self):
         objeto_Mruv=mruv.MRUV(self.name,float(self.posicion_final),float(self.acceleration),float(self.velocidad_inicial),float(self.velocidad_final),float(self.tiempo))
@@ -62,6 +65,18 @@ class Controlador :
             self.var_archivo=objeto_Mruv.info_archivo()
         
         elif self.acceleration!=0 and self.posicion_final!=0 and self.velocidad_inicial==0 and self.tiempo==0:
+            
+            objeto_Mruv.frm_velocidad_final()
+            objeto_Mruv.frm_tiempo()
+
+            objeto_Mruv.listar_tiempo()
+            objeto_Mruv.guardar_datos_aceleracion()
+            objeto_Mruv.guardar_datos_velocidad()
+            objeto_Mruv.guardar_datos_distancia()
+            objeto_Mruv.unir_datos()
+            self.var_archivo=objeto_Mruv.info_archivo()
+
+        elif self.acceleration!=0 and self.posicion_final!=0 and self.velocidad_inicial>0 and self.tiempo==0:
             
             objeto_Mruv.frm_velocidad_final()
             objeto_Mruv.frm_tiempo()
@@ -174,7 +189,10 @@ class Controlador :
 
 
     def alerta(self):
-        self.var_alerta='hola'
+        if self.var_velocidad>0:
+            self.var_alerta='\u26A0\ufe0f'+' Alerta de choque'
+        else:
+            self.var_alerta='\U0001F44D'
         return self.var_alerta
     
 
